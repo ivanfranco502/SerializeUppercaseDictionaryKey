@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -13,7 +14,7 @@ namespace SerializeUppercaseDictionaryKey
 			{
 				Date = new DateTime(2016, 6, 27, 0, 0, 0, DateTimeKind.Utc),
 				Game = "Donkey Kong",
-				UserPoints = new Dictionary<string, int>
+				UserPoints = new UserPointsDictionary<string, int>
 				{
 					{"JamesNK", 9001 },
 					{"JoC", 1337 },
@@ -25,7 +26,7 @@ namespace SerializeUppercaseDictionaryKey
 			{
 				NamingStrategy = new CamelCaseNamingStrategy
 				{
-					ProcessDictionaryKeys = false
+					ProcessDictionaryKeys = true
 				}
 			};
 
@@ -43,7 +44,19 @@ namespace SerializeUppercaseDictionaryKey
 		{
 			public DateTime Date { get; set; }
 			public string Game { get; set; }
-			public Dictionary<string, int> UserPoints { get; set; }
+			public UserPointsDictionary<string, int> UserPoints { get; set; }
+		}
+
+		[JsonDictionary(NamingStrategyType = typeof(DefaultNamingStrategy))]
+		public class UserPointsDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+		{
+			public UserPointsDictionary()
+			{
+				
+			}
+			public UserPointsDictionary(Dictionary<TKey,TValue> dictionary):base(dictionary)
+			{
+			}
 		}
 	}
 }
